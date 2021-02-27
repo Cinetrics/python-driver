@@ -96,16 +96,7 @@ def get_cloud_config(cloud_config, create_pyopenssl_context=False):
 
 
 def read_cloud_config_from_zip(cloud_config, create_pyopenssl_context):
-    secure_bundle = cloud_config['secure_connect_bundle']
-    use_default_tempdir = cloud_config.get('use_default_tempdir', None)
-    with ZipFile(secure_bundle) as zipfile:
-        base_dir = tempfile.gettempdir() if use_default_tempdir else os.path.dirname(secure_bundle)
-        tmp_dir = tempfile.mkdtemp(dir=base_dir)
-        try:
-            zipfile.extractall(path=tmp_dir)
-            return parse_cloud_config(os.path.join(tmp_dir, 'config.json'), cloud_config, create_pyopenssl_context)
-        finally:
-            shutil.rmtree(tmp_dir)
+        return parse_cloud_config('config.json', cloud_config, create_pyopenssl_context)
 
 
 def parse_cloud_config(path, cloud_config, create_pyopenssl_context):
